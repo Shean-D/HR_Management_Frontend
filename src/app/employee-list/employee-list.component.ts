@@ -1,26 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { EmployeeService } from '../services/employee.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-employee-list',
+  standalone: true,
+  imports: [CommonModule, RouterModule,],
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.css'],
 })
-export class EmployeeListComponent implements OnInit {
-  employees: any[] = [];
-  errorMessage: string = '';
+export class EmployeeListComponent {
+  employees = signal<any[]>([]);
+  errorMessage = signal<string>('');
 
-  constructor(private employeeService: EmployeeService) {}
+  constructor(private employeeService: EmployeeService, private router: Router) {}
 
-  ngOnInit(): void {
-    this.loadEmployees();
+  async ngOnInit(): Promise<void> {
+    await this.loadEmployees();
   }
 
   async loadEmployees() {
     try {
-      this.employees = await this.employeeService.getAllEmployees();
+      this.employees.set(await this.employeeService.getAllEmployees());
     } catch (error) {
-      this.errorMessage = 'Failed to load employees.';
+      this.errorMessage.set('Failed to load employees.');
     }
   }
 
@@ -30,7 +35,7 @@ export class EmployeeListComponent implements OnInit {
         await this.employeeService.deleteEmployee(id);
         this.loadEmployees(); // Refresh the list
       } catch (error) {
-        this.errorMessage = 'Failed to delete employee.';
+        this.errorMessage.set('Failed to delete employee.');
       }
     }
   }

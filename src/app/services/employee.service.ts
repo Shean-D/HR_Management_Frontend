@@ -21,6 +21,10 @@ export class EmployeeService {
     return response.data;
   }
 
+  async getEmployeeById(id: number) {
+    const response = await axios.get(`${this.baseUrl}/${id}`);
+    return response.data;
+  }
   
   async updateEmployee(id: number, updatedEmployee: any) {
     const response = await axios.put(`${this.baseUrl}/${id}`, updatedEmployee);

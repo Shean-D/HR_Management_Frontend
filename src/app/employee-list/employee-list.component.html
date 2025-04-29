@@ -15,7 +15,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let employee of employees">
+        <tr *ngFor="let employee of employees()">
           <td>{{ employee.id }}</td>
           <td>{{ employee.name }}</td>
           <td>{{ employee.email }}</td>
@@ -30,5 +30,5 @@
       </tbody>
     </table>
   
-    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div *ngIf="errorMessage()" class="alert alert-danger">{{ errorMessage() }}</div>
   </div>
